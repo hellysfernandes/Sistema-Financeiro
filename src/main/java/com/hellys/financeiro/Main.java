@@ -10,7 +10,6 @@ public class Main {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
 
-        Transacao transacao;
         FinanceiroService financeiroService = new FinanceiroService();
 
         int escolha;
@@ -34,31 +33,11 @@ public class Main {
                 case 0:
                     System.out.println("saindo do sistema");
                     break;
-
                 case 1:
-                    System.out.println("Digite a descrição");
-                    String receitaDescricao = input.nextLine();
-
-                    System.out.println("Digite o valor");
-                    double receitaValor = input.nextDouble();
-                    input.nextLine();
-
-                    transacao = new Transacao(receitaDescricao, receitaValor, TipoTransacao.RECEITA);
-                    financeiroService.adicionarTransacao(transacao);
-
+                    cadastrarTransacao(input, financeiroService, TipoTransacao.RECEITA);
                     break;
-
                 case 2:
-                    System.out.println("Digite a descrição");
-                    String dispesaDescricao = input.nextLine();
-
-                    System.out.println("Digite o valor");
-                    double dispesaValor = input.nextDouble();
-                    input.nextLine();
-
-                    transacao = new Transacao(dispesaDescricao, dispesaValor, TipoTransacao.DESPESA);
-                    financeiroService.adicionarTransacao(transacao);
-
+                    cadastrarTransacao(input, financeiroService, TipoTransacao.DESPESA);
                     break;
                 case 3:
                     financeiroService.listarTransacoes();
@@ -67,54 +46,10 @@ public class Main {
                     System.out.println("Saldo: R$ " + financeiroService.calcularSaldo());
                     break;
                 case 5:
-                    financeiroService.listarTransacoes();
-                    System.out.println("escolha o ID de qual transação deseja deletar");
-                    int deletId = input.nextInt();
-
-                    financeiroService.removerTransacao(deletId);
+                    removerTransacao(input, financeiroService);
                     break;
                 case 6:
-                    financeiroService.listarTransacoes();
-                    System.out.println("escolha o ID de qual transação deseja editar");
-                    int editId = input.nextInt();
-
-                    System.out.println("===== Editar Transação =====");
-                    System.out.println(financeiroService.);
-                    System.out.println("o que deseja editar");
-
-                    System.out.println("1 - Descrição");
-                    System.out.println("2 - Valor");
-                    System.out.println("3 - Tipo");
-                    System.out.println("0 - Cancelar");
-
-                    int edicao = input.nextInt();
-
-                    switch (edicao) {
-                        case 0:
-                            System.out.println("Canselando edisão");
-                            break;
-                        case 1:
-                            System.out.println("Digite a nova descrição");
-                            String descricao = input.nextLine();
-                            financeiroService.editarDescricao(editId, descricao);
-
-                            break;
-                        case 2:
-                            System.out.println("Digite o novo valor");
-                            double valor = input.nextDouble();
-                            transacao.setValor(valor);
-                            break;
-                        case 3:
-                            System.out.println("Trocando tipo");
-                            if (transacao.getTipo() == TipoTransacao.RECEITA) {
-                                transacao.setTipo(TipoTransacao.DESPESA);
-                            } else {
-                                transacao.setTipo(TipoTransacao.RECEITA);
-                            }
-                            break;
-                        default:
-                            break;
-                    }
+                    editarTransacao(input, financeiroService);
                     break;
                 default:
                     System.out.println("Fail: comando invalido");
@@ -123,5 +58,71 @@ public class Main {
 
         } while (escolha != 0);
 
+    }
+
+    private static void cadastrarTransacao(Scanner input, FinanceiroService financeiroService, TipoTransacao tipo) {
+        System.out.println("Digite a descrição");
+        String descricao = input.nextLine();
+
+        System.out.println("Digite o valor");
+        double valor = input.nextDouble();
+        input.nextLine();
+
+        Transacao transacao = new Transacao(descricao, valor, tipo);
+        financeiroService.adicionarTransacao(transacao);
+    }
+
+    private static void removerTransacao(Scanner input, FinanceiroService financeiroService) {
+        financeiroService.listarTransacoes();
+        System.out.println("escolha o ID de qual transação deseja deletar");
+        int id = input.nextInt();
+
+        financeiroService.removerTransacao(id);
+    }
+
+    private static void editarTransacao(Scanner input, FinanceiroService financeiroService) {
+        financeiroService.listarTransacoes();
+        System.out.println("escolha o ID de qual transação deseja editar");
+        int id = input.nextInt();
+        input.nextLine();
+
+        System.out.println("===== Editar Transação =====");
+        System.out.println(financeiroService.buscarPorId(id));
+        System.out.println("o que deseja editar");
+
+        System.out.println("1 - Descrição");
+        System.out.println("2 - Valor");
+        System.out.println("3 - Tipo");
+        System.out.println("0 - Cancelar");
+
+        int escolha = input.nextInt();
+        input.nextLine();
+
+        switch (escolha) {
+            case 0:
+                System.out.println("Canselando edisão");
+                break;
+            case 1:
+                System.out.println("Digite a nova descrição");
+                String descricao = input.nextLine();
+                financeiroService.editarDescricao(id, descricao);
+
+                break;
+            case 2:
+                System.out.println("Digite o novo valor");
+                double valor = input.nextDouble();
+                input.nextLine();
+                financeiroService.editarValor(id, valor);
+
+                break;
+            case 3:
+                System.out.println("Trocando tipo");
+                financeiroService.editarTipo(id);
+
+                break;
+            default:
+                System.out.println("Fail: escolha nao encontrada");
+                break;
+        }
     }
 }
