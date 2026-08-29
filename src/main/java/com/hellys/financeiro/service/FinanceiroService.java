@@ -2,29 +2,33 @@ package com.hellys.financeiro.service;
 
 import com.hellys.financeiro.model.TipoTransacao;
 import com.hellys.financeiro.model.Transacao;
+import com.hellys.financeiro.repository.TransacaoRepository;
 
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.List;
 
 public class FinanceiroService {
-    private List<Transacao> transacoes;
-
+    private TransacaoRepository repository;
+    
     public FinanceiroService() {
-        this.transacoes = new ArrayList<>();
+        this.repository = new TransacaoRepository();
     }
 
-    public void adicionarTransacao(Transacao transacao) {
-        transacoes.add(transacao);
+    public void adicionarTransacao(Transacao transacao) throws SQLException {
+        repository.salvar(transacao);
     }
 
-    public void listarTransacoes() {
+    public void listarTransacoes() throws SQLException {
+        List<Transacao> transacoes = repository.listar();
+
         for (Transacao transacao : transacoes) {
             System.out.println(transacao);
             System.out.println("----------------------------");
         }
     }
 
-    public double calcularSaldo() {
+    public double calcularSaldo() throws SQLException {
+        List<Transacao> transacoes = repository.listar();
         double saldo = 0;
 
         for (Transacao transacao : transacoes) {
@@ -38,65 +42,23 @@ public class FinanceiroService {
         return saldo;
     }
 
-    public void removerTransacao(int id) {
-        Transacao transacao = buscarPorId(id);
-
-        if (transacao == null) {
-            System.out.println("Fail: ID nao econtrado");
-            return;
-        }
-
-        System.out.println("Transação: \n" +transacao+ "\nRemovida com suceso");
-        transacoes.remove(transacao);
+    public void removerTransacao(int id) throws SQLException {
+        repository.deletar(id);
     }
 
-    public void editarDescricao(int id, String descricao) {
-        Transacao transacao = buscarPorId(id);
-
-        if (transacao == null) {
-            System.out.println("Fail: ID nao econtrado");
-            return;
-        }
-
-        transacao.setDescricao(descricao);
-        System.out.println("Descrição alterado com suceso");
+    public void editarDescricao(int id, String descricao) throws SQLException {
+        repository.editarDescricao(id, descricao);
     }
 
-    public void editarValor(int id, double valor) {
-        Transacao transacao = buscarPorId(id);
-
-        if (transacao == null) {
-            System.out.println("Fail: ID nao econtrado");
-            return;
-        }
-
-        transacao.setValor(valor);
-        System.out.println("Valor alterado com suceso");
+    public void editarValor(int id, double valor) throws SQLException {
+        repository.editarValor(id, valor);
     }
 
-    public void editarTipo(int id) {
-        Transacao transacao = buscarPorId(id);
-
-        if (transacao == null) {
-            System.out.println("Fail: ID nao econtrado");
-            return;
-        }
-
-        if (transacao.getTipo() == TipoTransacao.RECEITA) {
-            transacao.setTipo(TipoTransacao.DESPESA);
-        } else {
-            transacao.setTipo(TipoTransacao.RECEITA);
-        }
-
-        System.out.println("Troca de tipo realizado com suceso");
+    public void editarTipo(int id) throws SQLException {
+        repository.editarTipo(id);
     }
 
-    public Transacao buscarPorId(int id) {
-        for (Transacao transacao : transacoes) {
-            if (id == transacao.getId()) {
-                return transacao;
-            }
-        }
-        return null;
+    public Transacao buscarPorId(int id) throws SQLException {
+       return repository.buscarPorId(id);
     }
 }

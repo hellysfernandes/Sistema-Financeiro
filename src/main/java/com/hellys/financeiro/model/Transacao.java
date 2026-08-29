@@ -3,8 +3,6 @@ package com.hellys.financeiro.model;
 import java.time.LocalDate;
 
 public class Transacao {
-    private static int proximoId = 1;
-
     private int id;
     private String descricao;
     private double valor;
@@ -12,11 +10,17 @@ public class Transacao {
     private TipoTransacao tipo;
 
     public Transacao(String descricao,  double valor, TipoTransacao tipo) {
-        this.id = proximoId;
-        proximoId++;
         this.descricao = descricao;
         this.valor = valor;
         this.data = LocalDate.now();
+        this.tipo = tipo;
+    }
+
+    public Transacao(int id, String descricao, double valor, LocalDate data, TipoTransacao tipo) {
+        this.id = id;
+        this.descricao = descricao;
+        this.valor = valor;
+        this.data = data;
         this.tipo = tipo;
     }
 
