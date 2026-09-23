@@ -83,7 +83,7 @@ public class TransacaoRepository {
             int linhasAfetadas = pstmt.executeUpdate();
 
             if (linhasAfetadas == 0) {
-                System.out.println("Fail: id nao encontradpo");
+                System.out.println("Fail: id não encontrado");
                 return;
             }
 
@@ -103,11 +103,11 @@ public class TransacaoRepository {
             int linhasAfetadas = pstmt.executeUpdate();
 
             if (linhasAfetadas == 0) {
-                System.out.println("id nao encontradpo");
+                System.out.println("id não encontrado");
                 return;
             }
 
-            System.out.println("descrição alterado para: " +descricao+ " para transaçãp com id: " +id);
+            System.out.println("descrição alterado para: " +descricao+ " para transação com id: " +id);
         }
     }
 
@@ -123,7 +123,7 @@ public class TransacaoRepository {
             int linhasAfetadas = pstmt.executeUpdate();
 
             if (linhasAfetadas == 0) {
-                System.out.println("Fail: id nao encontradpo");
+                System.out.println("Fail: id não encontrado");
                 return;
             }
 
@@ -143,7 +143,7 @@ public class TransacaoRepository {
 
             try (ResultSet result = pstmt1.executeQuery()) {
                 if (!result.next()) {
-                    System.out.println("Fail: id nao encontrado");
+                    System.out.println("Fail: id não encontrado");
                     return;
                 }
 
@@ -174,7 +174,7 @@ public class TransacaoRepository {
 
             try (ResultSet result = pstmt.executeQuery();) {
                 if (!result.next()) {
-                    System.out.println("id nao encontradfo");
+                    System.out.println("id não encontrado");
                     return null;
                 }
 
